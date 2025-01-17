@@ -22,8 +22,8 @@ import (
 	"sync/atomic"
 
 	"cloud.google.com/go/storage"
-	"github.com/tus/tusd/v2/internal/uid"
-	"github.com/tus/tusd/v2/pkg/handler"
+	"github.com/MariuszBartnik/tusd/v3/internal/uid"
+	"github.com/MariuszBartnik/tusd/v3/pkg/handler"
 )
 
 // See the handler.DataStore interface for documentation about the different

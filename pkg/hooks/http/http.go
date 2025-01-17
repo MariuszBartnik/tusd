@@ -12,8 +12,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/MariuszBartnik/tusd/v3/pkg/hooks"
 	"github.com/sethgrid/pester"
-	"github.com/tus/tusd/v2/pkg/hooks"
 )
 
 type HttpHook struct {

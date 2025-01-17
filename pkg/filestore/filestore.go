@@ -22,8 +22,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/tus/tusd/v2/internal/uid"
-	"github.com/tus/tusd/v2/pkg/handler"
+	"github.com/MariuszBartnik/tusd/v3/internal/uid"
+	"github.com/MariuszBartnik/tusd/v3/pkg/handler"
 )
 
 var defaultFilePerm = os.FileMode(0664)

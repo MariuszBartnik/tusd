@@ -9,8 +9,8 @@ import (
 	io "io"
 	reflect "reflect"
 
+	handler "github.com/MariuszBartnik/tusd/v3/pkg/handler"
 	gomock "github.com/golang/mock/gomock"
-	handler "github.com/tus/tusd/v2/pkg/handler"
 )
 
 // MockFullDataStore is a mock of FullDataStore interface.

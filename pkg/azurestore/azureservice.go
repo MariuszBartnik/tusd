@@ -32,7 +32,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/bloberror"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/blockblob"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/container"
-	"github.com/tus/tusd/v2/pkg/handler"
+	"github.com/MariuszBartnik/tusd/v3/pkg/handler"
 )
 
 const (
@@ -193,7 +193,7 @@ func (blockBlob *BlockBlob) GetOffset(ctx context.Context) (int64, error) {
 	var indexes []int
 	var offset int64
 
-	resp, err := blockBlob.BlobClient.GetBlockList(ctx, blockblob.BlockListUncommitted, nil)
+	resp, err := blockBlob.BlobClient.GetBlockList(ctx, blockblob.BlockListTypeUncommitted, nil)
 	if err != nil {
 		return 0, checkForNotFoundError(err)
 	}
