@@ -193,7 +193,7 @@ func (blockBlob *BlockBlob) GetOffset(ctx context.Context) (int64, error) {
 	var indexes []int
 	var offset int64
 
-	resp, err := blockBlob.BlobClient.GetBlockList(ctx, blockblob.BlockListTypeAll, nil)
+	resp, err := blockBlob.BlobClient.GetBlockList(ctx, blockblob.BlockListUncommitted, nil)
 	if err != nil {
 		return 0, checkForNotFoundError(err)
 	}
