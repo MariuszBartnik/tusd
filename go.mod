@@ -1,4 +1,4 @@
-module https://github.com/MariuszBartnik/tusd/v3
+module github.com/MariuszBartnik/tusd/v3
 
 // Specify the Go version needed for the Heroku deployment
 // See https://github.com/heroku/heroku-buildpack-go#go-module-specifics
