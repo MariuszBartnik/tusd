@@ -27,6 +27,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/to"
+	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/blob"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/bloberror"
@@ -52,6 +53,7 @@ type AzService interface {
 }
 
 type AzConfig struct {
+	ClientId            string
 	AccountName         string
 	AccountKey          string
 	BlobAccessTier      string
@@ -86,7 +88,11 @@ type InfoBlob struct {
 // New Azure service for communication to Azure BlockBlob Storage API
 func NewAzureService(config *AzConfig) (AzService, error) {
 	// struct to store your credentials.
-	cred, err := azblob.NewSharedKeyCredential(config.AccountName, config.AccountKey)
+
+	clientId := azidentity.ClientID(config.ClientId)
+	opts := azidentity.ManagedIdentityCredentialOptions{ID: clientId}
+	identity, err := azidentity.NewManagedIdentityCredential(&opts)
+
 	if err != nil {
 		return nil, err
 	}
@@ -97,7 +103,7 @@ func NewAzureService(config *AzConfig) (AzService, error) {
 		RetryDelay:    100,  // Retry after 100ms initially
 		MaxRetryDelay: 5000, // Max retry delay 5 seconds
 	}
-	containerClient, err := container.NewClientWithSharedKeyCredential(serviceURL, cred, &container.ClientOptions{
+	containerClient, err := container.NewClient(serviceURL, identity, &container.ClientOptions{
 		ClientOptions: azcore.ClientOptions{
 			Retry: retryOpts,
 		},
