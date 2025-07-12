@@ -22,6 +22,7 @@ var Flags struct {
 	ShowGreeting                     bool
 	DisableDownload                  bool
 	DisableTermination               bool
+	DisableConcatenation             bool
 	DisableCors                      bool
 	CorsAllowOrigin                  string
 	CorsAllowCredentials             bool
@@ -54,6 +55,8 @@ var Flags struct {
 	HttpHooksForwardHeaders          string
 	HttpHooksRetry                   int
 	HttpHooksBackoff                 time.Duration
+	HttpHooksTimeout                 time.Duration
+	HttpHooksSizeLimit               int64
 	GrpcHooksEndpoint                string
 	GrpcHooksRetry                   int
 	GrpcHooksBackoff                 time.Duration
@@ -109,6 +112,7 @@ func ParseFlags() {
 		f.BoolVar(&Flags.ExperimentalProtocol, "enable-experimental-protocol", false, "Enable support for the new resumable upload protocol draft from the IETF's HTTP working group, next to the current tus v1 protocol. (experimental and may be removed/changed in the future)")
 		f.BoolVar(&Flags.DisableDownload, "disable-download", false, "Disable the download endpoint")
 		f.BoolVar(&Flags.DisableTermination, "disable-termination", false, "Disable the termination endpoint")
+		f.BoolVar(&Flags.DisableConcatenation, "disable-concatenation", false, "Disable support for the concatenation extension")
 		f.Int64Var(&Flags.MaxSize, "max-size", 0, "Maximum size of a single upload in bytes")
 	})
 
@@ -148,7 +152,7 @@ func ParseFlags() {
 	})
 
 	fs.AddGroup("Azure Storage options", func(f *flag.FlagSet) {
-		f.StringVar(&Flags.AzStorage, "azure-storage", "", "Use Azure BlockBlob Storage with this container name as a storage backend (requires the AZURE_STORAGE_ACCOUNT and AZURE_STORAGE_KEY environment variable to be set)")
+		f.StringVar(&Flags.AzStorage, "azure-storage", "", "Use Azure BlockBlob Storage with this container name as a storage backend (requires the AZURE_STORAGE_ACCOUNT and possibly AZURE_STORAGE_KEY environment variable to be set)")
 		f.StringVar(&Flags.AzContainerAccessType, "azure-container-access-type", "", "Access type when creating a new container if it does not exist (possible values: blob, container, '')")
 		f.StringVar(&Flags.AzBlobAccessTier, "azure-blob-access-tier", "", "Blob access tier when uploading new files (possible values: archive, cool, hot, '')")
 		f.StringVar(&Flags.AzObjectPrefix, "azure-object-prefix", "", "Prefix for Azure object names")
@@ -169,6 +173,8 @@ func ParseFlags() {
 		f.StringVar(&Flags.HttpHooksForwardHeaders, "hooks-http-forward-headers", "", "List of HTTP request headers to be forwarded from the client request to the hook endpoint")
 		f.IntVar(&Flags.HttpHooksRetry, "hooks-http-retry", 3, "Number of times to retry on a 500 or network timeout")
 		f.DurationVar(&Flags.HttpHooksBackoff, "hooks-http-backoff", 1*time.Second, "Wait period before retrying each retry")
+		f.DurationVar(&Flags.HttpHooksTimeout, "hooks-http-timeout", 15*time.Second, "Timeout for the HTTP hook requests")
+		f.Int64Var(&Flags.HttpHooksSizeLimit, "hooks-http-size-limit", 5*1024, "Maximum size of the response body in bytes")
 	})
 
 	fs.AddGroup("gRPC hook options", func(f *flag.FlagSet) {
